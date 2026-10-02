@@ -43,3 +43,12 @@ slug 只能用小寫英數字與連字號（`^[a-z0-9-]+$`），因為會出現�
 開啟 http://localhost:8000 。也可直接用 file:// 開啟 `site/index.html`。
 
 重新渲染圖片（例如調整增強參數後）：`.venv/bin/python tools/render.py <slug> --force`。
+
+## 公開 / 不公開
+
+- `docs/<slug>/meta.json` 的 `"publish"` 決定是否部署到 GitHub Pages。`new_doc.py` 新增的文件預設 `false`（加 `--publish` 才會公開）。
+- `tools/build.py` 會：
+  - `site/library.js`：只列 `publish: true` 的文件（部署用）。
+  - `site/library.preview.js`：列全部文件，只在本機預覽時出現（已被 git 忽略）。
+  - 自動在 `.gitignore` 產生一段清單，把未公開文件的 `docs/<slug>/` 與 `site/docs/<slug>/` 排除在 git 之外，所以不會被 commit 或 push。
+- 要公開某份：把 `"publish"` 改成 `true` → `tools/build.py` → commit、push。

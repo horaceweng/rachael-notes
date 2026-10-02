@@ -17,6 +17,7 @@ ap.add_argument("pdf_path")
 ap.add_argument("slug")
 ap.add_argument("--title", required=True)
 ap.add_argument("--subtitle", default="")
+ap.add_argument("--publish", action="store_true", help="include in the deployed site (default: local preview only)")
 a = ap.parse_args()
 
 if not re.fullmatch(r"[a-z0-9-]+", a.slug):
@@ -30,6 +31,6 @@ orders = [json.loads(p.read_text(encoding="utf-8")).get("order", 0)
 shutil.copy2(a.pdf_path, ROOT / "pdfs" / f"{a.slug}.pdf")
 (doc_dir / "ocr").mkdir(parents=True)
 meta = {"title": a.title, "subtitle": a.subtitle, "pdf": f"pdfs/{a.slug}.pdf",
-        "order": max(orders, default=0) + 1}
+        "order": max(orders, default=0) + 1, "publish": a.publish}
 (doc_dir / "meta.json").write_text(json.dumps(meta, ensure_ascii=False) + "\n", encoding="utf-8")
 render(a.slug)
